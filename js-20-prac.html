@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    const createTabMenu = (tabNames, tabContents) => {
+      const tabMenuContainer = document.getElementById("root");
+      const tabMenu = document.createElement("ul");
+      tabMenu.style.listStyleType = "none";
+      tabMenu.style.padding =0;
+      const tabButtons =tabNames.map((name,i)=>{
+        const tabButton =document.createElement("li");
+        tabButton.textContent =name;
+        tabButton.style.display ="block";
+        tabButton.style.padding ="10px";
+        tabButton.style.border ="1px solid #ccc";
+        tabButton.addEventListener("click",(event)=> {
+          const index = tabButtons.indexOf( event.target);
+          const tabContentContainer = tabMenuContainer.querySelector("[data-tab-content-container]");
+          if(tabContentContainer) {
+            const tabContentElements = tabContentContainer.childNodes;
+            tabContentElements.forEach((element, j)=> {
+              element.style.display = j === index ? "block" : "none";
+            });
+          }
+          tabButtons.forEach((button, j)=>{
+            button.style.backgroundColor = j == index ? "#ccc" : "#fff";
+            button.style.color = j === index ? "#fff" : "#000";
+          });
+        });
+        tabMenu.appendChild(tabButton);
+        return tabButton;
+      });
+      tabButtons[0].style.backgroundColor = "#ccc";
+      tabButtons[0].style.color = "#fff";
+
+      const tabContentContainer = document.createElement("div");
+      tabContentContainer.setAttribute("data-tab-content-container", "");
+      const tabContentElements = tabContents.map((content, i)=>{
+        const tabContentElement =document.createElement("div");
+        tabContentElement.appendChild(content);
+        if( i !== 0){
+          tabContentElement.style.display = "none";
+        }
+        return tabContentElement;
+      });
+      tabContentElements.reduce((prev ,curr)=> {
+        prev.appendChild(curr);
+        return prev;
+      }, tabContentContainer);
+      tabMenuContainer.appendChild(tabMenu);
+      tabMenuContainer.appendChild(tabContentContainer);
+    };
+
+    const tabNames = ["web" , "front-end" , "framework"];
+    const tabContents =[
+      document.createTextNode("React.js"),
+      document.createTextNode("Vue.js"),
+      document.createTextNode("Angular.js")
+    ];
+    createTabMenu(tabNames,tabContents);
+    
+    
+  </script>
+</body>
+</html>
